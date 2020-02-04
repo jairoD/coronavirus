@@ -16,6 +16,7 @@ import axios from 'axios';
 import MapChart from "./MapChart";
 import Grid from '@material-ui/core/Grid';
 import ReactTooltip from "react-tooltip";
+import { Container, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   table: {
@@ -71,23 +72,23 @@ function App() {
       console.log(err);
     })
     ncov2019.overall().then(response => {
-      
+
       //console.log(response.data);
       setOverall(response.data);
     }).catch(err => {
       console.log(err);
     })
 
-    
+
   }, []);
 
   useEffect(() => {
     var aux = 0;
     var aux1 = 0;
-    var aux2 = 0; 
+    var aux2 = 0;
     var aux3 = [];
     cities && cities.forEach(element => {
-      aux3.push(createData(element.provinceState === '' ?  element.countryRegion :element.countryRegion + '-' + element.provinceState, element.confirmed, element.deaths, element.recovered));
+      aux3.push(createData(element.provinceState === '' ? element.countryRegion : element.countryRegion + '-' + element.provinceState, element.confirmed, element.deaths, element.recovered));
       aux1 = aux1 + element.confirmed;
       aux = aux + element.recovered;
       aux2 = aux2 + element.deaths;
@@ -130,7 +131,11 @@ function App() {
       <Grid container spacing={3} direction="row"
         justify="center"
         alignItems="center" style={{ paddingBottom: '10px' }}>
-
+        <Grid item xs={12} style={{ textAlign: 'center' }}>
+          <Typography variant="h2">
+            Coronavirus nCoV 2019
+          </Typography>
+        </Grid>
         <Grid item xs={12} sm={3}>
           <Paper className={classes.paper}>
             {
@@ -165,8 +170,9 @@ function App() {
       </Grid>
       <MapChart setTooltipContent={setContent} overall={overall} />
       <ReactTooltip multiline={true} html={true}>{content}</ReactTooltip>
-      <div style={{ width: '100%' }}>
-        <Table className={classes.table} aria-label="simple table" style={{ paddingTop: '10px', width: 400, margin: 'auto' }}>
+
+      <TableContainer component={Paper}>
+        <Table className={classes.table} aria-label="simple table" style={{ paddingTop: '10px', margin: 'auto' }}>
           <TableHead>
             <TableRow>
               <TableCell>Pais/Region - Provincia/Estado</TableCell>
@@ -188,8 +194,7 @@ function App() {
             ))}
           </TableBody>
         </Table>
-      </div>
-
+      </TableContainer>
 
     </div>
   );

@@ -20,10 +20,25 @@ const rounded = num => {
 };
 
 const MapChart = ({ setTooltipContent, overall }) => {
+  const [zoom, setZoom] = React.useState(1);
+
+  function handleZoomIn() {
+    if (zoom >= 4) return;
+    setZoom(zoom * 2);
+  }
+
+  function handleZoomOut() {
+    if (zoom <= 1) return;
+    setZoom(zoom / 2);
+  }
+
+  function handleZoomEnd(position) {
+    setZoom(position.zoom);
+  }
   return (
     <>
-      <ComposableMap data-tip="" projectionConfig={{ scale: 150 }}>
-        <ZoomableGroup>
+      <ComposableMap data-tip="" projectionConfig={{ scale: 200 }}>
+        <ZoomableGroup zoom={zoom} onZoomEnd={handleZoomEnd}>
           <Geographies geography={geoUrl}>
             {({ geographies }) =>
               geographies.map(geo => (
@@ -70,6 +85,33 @@ const MapChart = ({ setTooltipContent, overall }) => {
           </Geographies>
         </ZoomableGroup>
       </ComposableMap>
+      <div className="controls">
+        <button onClick={handleZoomIn}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth="3"
+          >
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </button>
+        <button onClick={handleZoomOut}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth="3"
+          >
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </button>
+      </div>
     </>
   );
 };
